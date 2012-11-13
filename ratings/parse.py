@@ -27,17 +27,27 @@ TODO:
 """
 import json
 import io
-
+import csv
 
 class Result(object):
 
-	def __init__(self):
-		""" """
+    def __init__(self):
+        """ """
 
-	def get_raw_data(self, filename):
-		""" returns raw data - movies list after parsing json """
-		 
-		f = io.open(filename, 'r', encoding='latin-1')		
-		data = json.loads(f.readline())
-		f.close()
-		return data
+    def get_raw_data(self, filename):
+        """ returns raw data - movies list after parsing json """
+        f = io.open(filename, 'r', encoding='latin-1')		
+        data = json.loads(f.readline())
+        f.close()
+        return data
+    
+    def export_file(self, input_filename, output_filename):
+        """ export to .csv file """
+        f = io.open(input_filename, 'r', encoding='latin-1')
+        data = json.loads(f.readline())
+        f.close()
+        f = csv.writer(open(output_filename, 'wb+'))
+        f.writerow(['title', 'score'])
+        for element in data:
+            row = [element['movie']['title'], element['score']]
+            f.writerow([unicode(s).encode("utf-8") for s in row])
